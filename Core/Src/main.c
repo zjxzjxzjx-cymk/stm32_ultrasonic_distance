@@ -185,29 +185,19 @@ int main(void)
     SSD1306_ShowString_6x8(0, 0, "Distance:", 1);
 
     if (distance >= 0 && distance <= 400) {
-        /* 大号数字显示距离 */
-        SSD1306_ShowNum(32, 12, (int32_t)distance, 3, 2);
-
-        /* 单位 "cm" */
-        SSD1306_ShowString_6x8(0, 34, "Unit: cm", 1);
+        /* 大号数字 + 单位 "cm"（8x16大字紧跟） */
+        SSD1306_ShowNum(20, 10, (int32_t)distance, 3, 2);
+        SSD1306_ShowString_8x16(50, 10, "cm", 1);
     } else {
-        /* 超时/无效 → 显示 NO SIGNAL */
         SSD1306_ShowString_6x8(20, 16, "-- NO SIGNAL --", 1);
         SSD1306_ShowString_6x8(0, 34, "Out of range!", 1);
     }
 
-    /* 底部显示报警阈值 */
-    char buf[20];
-    sprintf(buf, "Alarm: %3d cm", threshold);
-    SSD1306_ShowString_6x8(0, 50, buf, 1);
+    /* 底部报警行：全部 8x16 大字 */
+    SSD1306_ShowString_8x16(0,  40, "Alarm:", 1);
+    SSD1306_ShowNum(54, 40, threshold, 2, 2);
+    SSD1306_ShowString_8x16(78, 40, "cm", 1);
 
-    /* 报警状态指示 */
-    if (distance >= 0 && distance <= threshold) {
-        /* 右侧显示 "!!!" */
-        SSD1306_ShowString_6x8(100, 50, "!!!", 1);
-    } else {
-        SSD1306_ShowString_6x8(100, 50, "   ", 1);
-    }
 
     SSD1306_UpdateScreen();
 
